@@ -18,36 +18,89 @@ int main()
 {
   bool deck[52];
   int numPlayers = 2;
-  int amountOfTimesPlayed = 1;
+  int gameAmount = 1;
   int cardsHeld[6] = {0,0,0,0,0,0};
-  int hitLimit[6] = {16,1,1,1,1,1};
+  int hitLimit[6] = {1,1,1,1,1,16};
   int newCard;
   int aceAmount[6] = {0,0,0,0,0,0}; // potentially use char but not sure
   int test;
+  int playerWins[6]= {0,0,0,0,0,0}; // first being the dealer second being player 1 (our player in this case), etc.
+  bool randomAmount[6] = {0,0,0,0,0,0}; // this is if I want it to be a random number for their hitLimit
   shuffle(deck, cardsHeld, aceAmount);
   do{
-  if (numPlayers <2 || numPlayers >6) {cout << endl << "Please try again and this time dont fuck up simple shit please" << endl << endl;}
+  if (numPlayers <2 || numPlayers >6) {cout << endl << "Please try again" << endl << endl;}
   cout << "Number of players (note there will always be at minimum 2 at maximum 6 (player one will assume to be your character))" << endl;
   cin >> numPlayers;
 } while (numPlayers <2 || numPlayers >6);
   do {
-    cout << "Number of times the game is played (note there will always be at minimum 1 at maximum 1,000,000)" << endl;
-    cin >> amountOfTimesPlayed;
-  } while(amountOfTimesPlayed < 1 || amountOfTimesPlayed > 1000000);
+    cout << "Number of times the game is played (note there will always be at minimum 1 at maximum 1,000)" << endl;
+    cin >> gameAmount;
+  } while(gameAmount < 1 || gameAmount > 1000);
 
-  for (int i = 0; i < (numPlayers - 1); i++){
+  for (int i = 0; i < (numPlayers); i++){
     do{
-    cout << "Set hit limit for character " << i + 1 << ". Put '0' if you want it to be a random number between 14 and 18." << endl;
+    if (i == numPlayers - 1){test = 16; break;}
+    cout << "Set hit limit for character " << i + 1 << "." << endl <<"Put '0' if you want it to be a random number between 14 and 18." << endl << "Put a negative number if you want their hit limit to be random every hand" << endl << endl;
     cin >> test;
     if (test == 0)
     {
       test = (rand() % 5) + 14;
       break;
     }
-  }while (test > 21 || test < 1);
-  hitLimit[i+1] = test;
+    else if (test < 0) {randomAmount[i] = true; test = (rand() % 5) + 14;}
+  }while (test > 21 || test < 12);
+  // if (i == numPlayers - 1) {test = 16;}
+  test++;
+  hitLimit[i] = test;
   }
 
+  for (int i = 0; i < gameAmount; i++){
+      firstDeal(cardsHeld,deck,numPlayers,aceAmount);
+      for (int j = 0; j < numPlayers; j++){
+        if (randomAmount){
+          hitLimit[j] = rand() %5 + 14;
+        }
+        if (cardsHeld [j] < (hitLimit[j])){
+          do {
+            do{
+                newCard = rand() % 52;
+            } while(deck[newCard] == 0); // make sure someone isnt already holding that card
+            deck[newCard] = 0; // get it out of the deck
+            newCard = (newCard)/4 + 2;
+            if (newCard >= 11 && newCard != 14){
+              newCard = 10;
+            }
+            else if (newCard == 14){
+              newCard = 11;
+              aceAmount[i] ++;
+              if ((cardsHeld[i] + newCard) > 21)
+              {
+                newCard = 1;
+                aceAmount[i] --;
+              }
+            }
+            cardsHeld[j] += newCard;
+          } while(cardsHeld [j] < hitLimit[j]);
+        }
+      }   // after this everyone should have the card they were given
+          // then we have to see who won
+      for (int j = 0; j < (numPlayers - 1); j++){
+        if ((cardsHeld[j] <= 21) && (cardsHeld[j] > cardsHeld[numPlayers - 1]) || (cardsHeld[j] <= 21) && (cardsHeld[numPlayers - 1] > 21) )
+        {playerWins[j] ++;}
+        else {playerWins[numPlayers - 1]++;}
+      }
+
+
+      shuffle (deck, cardsHeld, aceAmount);
+  }
+  for (int j = 0; j < (numPlayers); j++){
+    if (j == numPlayers - 1){
+      cout << endl << "House Wins " << playerWins[j] << endl << endl;
+    }
+    else{
+      cout << "Player " << j + 1 << "'s wins: " << playerWins[j] << endl;
+    }
+  }
   return 0;
 }
 
