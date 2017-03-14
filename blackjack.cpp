@@ -54,7 +54,7 @@ int main()
   test++;
   hitLimit[i] = test;
   }
-  
+
   cout << endl;
 
   for (int i = 0; i < gameAmount; i++){
@@ -83,7 +83,29 @@ int main()
               cardsHeld[j] = cardsHeld[j] - 10;
             }
             cardsHeld[j] += newCard;
+            /*
             if (j == numPlayers - 1 && cardsHeld[j] == 17 && aceAmount[j] > 0){
+              //this is called a soft 17 something the dealer must hit on
+              do{
+                  newCard = rand() % 52;
+              } while(deck[newCard] == 0); // make sure someone isnt already holding that card
+              deck[newCard] = 0; // get it out of the deck
+              newCard = (newCard)/4 + 2;
+              if (newCard >= 11 && newCard != 14){
+                newCard = 10;
+              }
+              else if (newCard == 14){
+                newCard = 11;
+                aceAmount[j] ++;
+              }
+              if (((cardsHeld[j] + newCard) > 21) && (aceAmount[j] > 0))
+              {
+                aceAmount[j]--;
+                cardsHeld[j] = cardsHeld[j] - 10;
+              }
+              cardsHeld[j] += newCard;
+            }*/
+            if (cardsHeld[j] == hitLimit[j] && aceAmount[j] > 0){
               //this is called a soft 17 something the dealer must hit on
               do{
                   newCard = rand() % 52;
@@ -111,9 +133,11 @@ int main()
       for (int j = 0; j < (numPlayers - 1); j++){
         if ((cardsHeld[j] <= 21) && (cardsHeld[j] > cardsHeld[numPlayers - 1]) || (cardsHeld[j] <= 21) && (cardsHeld[numPlayers - 1] > 21) )
         {playerWins[j] ++;}
+        else if ((cardsHeld[j] == cardsHeld[numPlayers -1])) {}
         else {playerWins[numPlayers - 1]++;}
       }
-      /*for (int j = 0; j < (numPlayers); j++){
+      /*
+      for (int j = 0; j < (numPlayers); j++){
         if (j == numPlayers - 1){
           cout << "House has " << cardsHeld[j] << endl << endl;
         }
