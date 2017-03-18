@@ -67,16 +67,16 @@ int main()
                 newCard = rand() % 52;
             } while(deck[newCard] == 0); // make sure someone isnt already holding that card
             deck[newCard] = 0; // get it out of the deck
-            newCard = (newCard)/4 + 2;
-            if (newCard >= 11 && newCard != 14){
+            newCard = (newCard)/4 + 2; // this works because of integer division 0/4 1/4 2/4 and 3/4 are all == 0
+            if (newCard >= 11 && newCard != 14){ // this gets us king queen and jack values
               newCard = 10;
             }
-            else if (newCard == 14){
+            else if (newCard == 14){ // this lets us know we have an ace actually.
               newCard = 11;
               aceAmount[j] ++;
             }
             if (((cardsHeld[j] + newCard) > 21) && (aceAmount[j] > 0))
-            {
+            {  // if we go over but we have an ace in our hand we want to subtract 10 since the ace can be two values
               aceAmount[j]--;
               cardsHeld[j] = cardsHeld[j] - 10;
             }
@@ -84,8 +84,8 @@ int main()
 
           } while(cardsHeld [j] < hitLimit[j]);
         }
-        else if (cardsHeld[j] == hitLimit[j] && aceAmount[j] > 0){
-          //this is called a soft 17 something the dealer must hit on
+        else if (cardsHeld[j] == hitLimit[j] && aceAmount[j] > 0 && cardsHeld[j] != 21){
+          // this is called a soft hit when you have an ace and are just past your hit limit.
           do{
               newCard = rand() % 52;
           } while(deck[newCard] == 0); // make sure someone isnt already holding that card
