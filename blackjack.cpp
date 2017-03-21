@@ -4,8 +4,9 @@
 
 using namespace std;
 
-void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6]);
-void firstDeal(int cardsHeld[6], bool deck[52], int numPlayers, int aceAmount[6]);
+void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]);
+void firstDeal(int cardsHeld[6], bool deck[52], int numPlayers, int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]);
+void hitMe(int cardsHeld[6], bool deck[52], int playerChoice, int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]);
 
 // I want a shuffle function that returns a shuffled deck - check
 // I want a way to go one way if the user decides to play or another
@@ -13,6 +14,8 @@ void firstDeal(int cardsHeld[6], bool deck[52], int numPlayers, int aceAmount[6]
 // Later on I'd like to introduce a form of card counting AI.
 // I'm going to set it every game to shuffle potentially change it later on
 
+// Really what I need to do is make a hit function.
+// or make player specific functions but that would be a lot of work that could already be incorporated in the already done designs.
 
 int main()
 {
@@ -24,14 +27,22 @@ int main()
   int aceAmount[6] = {0,0,0,0,0,0}; // potentially use char but not sure
   int playerWins[6]= {0,0,0,0,0,0}; // first being the dealer second being player 1 (our player in this case), etc.
   bool randomAmount[6] = {0,0,0,0,0,0}; // this is if I want it to be a random number for their hitLimit
+
+  // these are used for when the player is playing the game
   char gameType;
-  char userInput;
+  char playerChoice;
+  int numOfCards[2] = {0,0};
+  int suitType[5];
+  int cardType[5];
+  int dealerSuitType[5];
+  int dealerCardType[5];
+
   srand (time(NULL));               // set new "random" seed
-  shuffle(deck, cardsHeld, aceAmount); // set everything to its initial state before continuing
+  shuffle(deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards); // set everything to its initial state before continuing
   do{
     cout << endl << "If you want to play enter 'p' if you want the computer to play for you enter 'c'" << endl;
     cin >> gameType;
-  }while (gameType != 'p' || gameType != 'P' || gameType != 'C' || gameType != 'c');
+  }while (gameType != 'p' && gameType != 'P' && gameType != 'C' && gameType != 'c');
 if (gameType == 'c' || gameType == 'C'){
   do{
   if (numPlayers <2 || numPlayers >6) {cout << endl << "Please try again" << endl << endl;}
@@ -63,54 +74,18 @@ if (gameType == 'c' || gameType == 'C'){
   cout << endl;
 
   for (int i = 0; i < gameAmount; i++){ // now were at the actual game of blackjack.
-      firstDeal(cardsHeld,deck,numPlayers,aceAmount); // we deal the initial two cards out to everyone
+      firstDeal(cardsHeld, deck, numPlayers, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards); // we deal the initial two cards out to everyone
       for (int j = 0; j < numPlayers; j++){
         if (randomAmount[j]){   // if they wanted to have it as a random amount every time we set that hitlimit as a random amount every time.
           hitLimit[j] = rand() %5 + 14;
         }
         if (cardsHeld [j] < (hitLimit[j])){
           do {
-            do{
-                newCard = rand() % 52;
-            } while(deck[newCard] == 0); // make sure someone isnt already holding that card
-            deck[newCard] = 0; // get it out of the deck
-            newCard = (newCard)/4 + 2; // this works because of integer division 0/4 1/4 2/4 and 3/4 are all == 0
-            if (newCard >= 11 && newCard != 14){ // this gets us king queen and jack values
-              newCard = 10;
-            }
-            else if (newCard == 14){ // this lets us know we have an ace actually.
-              newCard = 11;
-              aceAmount[j] ++;
-            }
-            if (((cardsHeld[j] + newCard) > 21) && (aceAmount[j] > 0))
-            {  // if we go over but we have an ace in our hand we want to subtract 10 since the ace can be two values
-              aceAmount[j]--;
-              cardsHeld[j] = cardsHeld[j] - 10;
-            }
-            cardsHeld[j] += newCard;
-
+            hitMe(cardsHeld, deck, j, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
           } while(cardsHeld [j] < hitLimit[j]);
         }
-        else if (cardsHeld[j] == hitLimit[j] && aceAmount[j] > 0 && cardsHeld[j] != 21){
-          // this is called a soft hit when you have an ace and are just past your hit limit.
-          do{
-              newCard = rand() % 52;
-          } while(deck[newCard] == 0); // make sure someone isnt already holding that card
-          deck[newCard] = 0; // get it out of the deck
-          newCard = (newCard)/4 + 2;
-          if (newCard >= 11 && newCard != 14){
-            newCard = 10;
-          }
-          else if (newCard == 14){
-            newCard = 11;
-            aceAmount[j] ++;
-          }
-          if (((cardsHeld[j] + newCard) > 21) && (aceAmount[j] > 0))
-          {
-            aceAmount[j]--;
-            cardsHeld[j] = cardsHeld[j] - 10;
-          }
-          cardsHeld[j] += newCard;
+        if (cardsHeld[j] == hitLimit[j] && aceAmount[j] > 0 && cardsHeld[j] != 21){
+            hitMe(cardsHeld, deck, j, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
         }
       }   // after this everyone should have the card they were given
           // then we have to see who won
@@ -132,9 +107,10 @@ if (gameType == 'c' || gameType == 'C'){
         else{
           cout << "Player " << j + 1 << " has: " << cardsHeld[j] << endl;
         }
-      }*/
+      }
+      */
 
-      shuffle (deck, cardsHeld, aceAmount);
+      shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
   }
 
 
@@ -151,18 +127,14 @@ if (gameType == 'c' || gameType == 'C'){
   }
   // now were on the player playing the game
   else if (gameType == 'p' || gameType == 'P'){
-    int numOfCards[2] = {0,0};
-    int suitType[5];
-    int cardType[5];
-    int dealerSuitType[5];
-    int dealerCardType[5];
-    while(userInput != 'n' || userInput != 'N'){
+    numPlayers = 2;
+    while(playerChoice != 'n' || playerChoice != 'N'){
 
     }
   }
 }
 
-void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6]){
+void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]){
   for(int i = 0; i < 52; i++){
     deck[i] = true;
   }
@@ -171,50 +143,63 @@ void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6]){
     cardsHeld[i] = 0;
     aceAmount[i] = 0;
   }
+  for (int i = 0; i < 5; i++){
+  suitType[i] = 0;
+  cardType[i] = 0;
+  dealerSuitType[i] = 0;
+  dealerCardType[i] = 0;
+  }
+  numOfCards[0]= 0;
+  numOfCards[1]= 0;
 }
-void firstDeal(int cardsHeld[6], bool deck[52], int numPlayers, int aceAmount[6]){
+
+void firstDeal(int cardsHeld[6], bool deck[52], int numPlayers, int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]){
   int newCard;
   for (int i = 0; i < numPlayers; i++)
   {
-      do {
-        newCard = rand() % 52;
-      } while (deck[newCard] == 0);
-      deck[newCard] = 0;
-      newCard = (newCard)/4 + 2; // gotta figure out a formula for this
-
-      if (newCard >= 11 && newCard != 14)
-      {
-        newCard = 10;
-      }
-      else if (newCard == 14)
-      {
-        newCard = 11;
-        aceAmount[i] ++;
-      }
-      cardsHeld[i] += newCard;
+      hitMe(cardsHeld, deck, i, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
     }
   for (int i = 0; i < numPlayers; i++)
   {
-      do {
-        newCard = rand() % 52;
-      } while (deck[newCard] == 0);
-      deck[newCard] = 0;
-      newCard = (newCard)/4 + 2; // gotta figure out a formula for this
+      hitMe(cardsHeld, deck, i, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+  }
+}
 
-      if (newCard >= 11 && newCard != 14)
-      {
-        newCard = 10;
-      }
-      else if (newCard == 14)
-      {
-        newCard = 11;
-        aceAmount[i] ++;
-        if ((cardsHeld[i] + newCard) > 21)
-        {
-          newCard = 1;
-          aceAmount[i] --;
-        }
-      }
-      cardsHeld[i] += newCard;
-      }
+void hitMe(int cardsHeld[6], bool deck[52], int playerChoice, int aceAmount[6], int gameType, int suitType[5], int cardType[5], int dealerSuitType[5], int dealerCardType[5], int numOfCards[2]){
+  int newCard;
+  do {
+    newCard = rand() % 52;
+  } while (deck[newCard] == 0);
+  deck[newCard] = 0;
+  if (gameType == 'p' || gameType == 'P'){
+    if (playerChoice == 0)
+    {
+      suitType[numOfCards[0]] = newCard % 4 + 1;
+      cardType[numOfCards[0]] = newCard / 4 + 2;
+    }
+    else{
+      dealerSuitType[numOfCards[1]] = newCard % 4 + 1;
+      dealerCardType[numOfCards[1]] = newCard / 4 + 2;
+    }
+    numOfCards[playerChoice] ++;
+  }
+  newCard = (newCard)/4 + 2; // gotta figure out a formula for this
+
+  if (newCard >= 11 && newCard != 14)
+  {
+    newCard = 10;
+  }
+  else if (newCard == 14)
+  {
+    newCard = 11;
+    aceAmount[playerChoice] ++;
+  }
+  if (cardsHeld[playerChoice] + newCard > 21 && aceAmount[playerChoice] > 1)
+  {
+    aceAmount[playerChoice] --;
+    newCard = 1;
+  }
+  // The next line is only for debugging and making sure we're getting the correct values
+  // cout << "Player num " << playerChoice + 1 << " recieved the " << newCard << " card. Player " << playerChoice + 1 << " currently has " << cardsHeld[playerChoice] + newCard << endl;
+  cardsHeld[playerChoice] += newCard;
 }
