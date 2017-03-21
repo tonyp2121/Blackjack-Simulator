@@ -24,8 +24,15 @@ int main()
   int aceAmount[6] = {0,0,0,0,0,0}; // potentially use char but not sure
   int playerWins[6]= {0,0,0,0,0,0}; // first being the dealer second being player 1 (our player in this case), etc.
   bool randomAmount[6] = {0,0,0,0,0,0}; // this is if I want it to be a random number for their hitLimit
+  char gameType;
+  char userInput;
   srand (time(NULL));               // set new "random" seed
   shuffle(deck, cardsHeld, aceAmount); // set everything to its initial state before continuing
+  do{
+    cout << endl << "If you want to play enter 'p' if you want the computer to play for you enter 'c'" << endl;
+    cin >> gameType;
+  }while (gameType != 'p' || gameType != 'P' || gameType != 'C' || gameType != 'c');
+if (gameType == 'c' || gameType == 'C'){
   do{
   if (numPlayers <2 || numPlayers >6) {cout << endl << "Please try again" << endl << endl;}
   cout << endl << "Number of players (note there will always be at minimum 2 at maximum 6 (player one will assume to be your character))" << endl;
@@ -141,6 +148,18 @@ int main()
     }
   }
   return 0;
+  }
+  // now were on the player playing the game
+  else if (gameType == 'p' || gameType == 'P'){
+    int numOfCards[2] = {0,0};
+    int suitType[5];
+    int cardType[5];
+    int dealerSuitType[5];
+    int dealerCardType[5];
+    while(userInput != 'n' || userInput != 'N'){
+
+    }
+  }
 }
 
 void shuffle (bool deck[52], int cardsHeld[6], int aceAmount[6]){
