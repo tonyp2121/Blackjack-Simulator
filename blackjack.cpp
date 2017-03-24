@@ -29,7 +29,7 @@ int main()
   int hitLimit[6] = {1,1,1,1,1,16}; // keeps track of the hit limit
   int aceAmount[6] = {0,0,0,0,0,0}; // potentially use char but not sure
   int playerWins[6]= {0,0,0,0,0,0}; // first being the dealer second being player 1 (our player in this case), etc.
-  bool randomAmount[6] = {0,0,0,0,0,0}; // this is if I want it to be a random number for their hitLimit
+  bool randomAmount[6] = {0,0,0,0,0,0}; // this is if I want it to be a ra`ndom number for their hitLimit
 
   // these are used for when the player is playing the game
   char gameType;
@@ -135,11 +135,47 @@ if (gameType == 'c' || gameType == 'C'){
     while(playerChoice != 'n' && playerChoice != 'N'){
       firstDeal(cardsHeld, deck, numPlayers, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
       drawHand(suitType, cardType, dealerSuitType, dealerCardType, numOfCards, dealerTurn);
-      playerChoice = 'n';
+      cout << endl << "You currently hold " << cardsHeld[0] << "." << endl;
+      do{
+      if(cardsHeld[0] == 21) {break;}
+      cout << endl << "Enter 'h' if you'd like to hit, enter s if you'd like to stay." << endl;
+      cin >> playerChoice;} while (playerChoice != 's' && playerChoice != 'S' && playerChoice != 'h' && playerChoice != 'H');
       if (playerChoice == 'h' || playerChoice == 'H'){
-        //hitMe();
+        do{
+        hitMe(cardsHeld, deck, 0, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+        if(cardsHeld[0] > 21 && aceAmount[0] > 0) {cardsHeld[0] = cardsHeld[0] - 10; aceAmount[0] --;}
+        if(cardsHeld[0] >= 21) {break;}
+        drawHand(suitType, cardType, dealerSuitType, dealerCardType, numOfCards, dealerTurn);
+        cout << endl << "You currently hold " << cardsHeld[0] << "." << endl;
+        do{
+        cout << endl << "Enter 'h' if you'd like to hit, enter 's' if you'd like to stay." << endl;
+        cin >> playerChoice;} while (playerChoice != 's' && playerChoice != 'S' && playerChoice != 'h' && playerChoice != 'H');
+      } while((playerChoice == 'h' || playerChoice == 'H') && numOfCards[0] < 5);
       }
+      if (cardsHeld[1] < 17 && numOfCards[1] < 5){
+        do {
+          hitMe(cardsHeld, deck, 1, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+        } while(cardsHeld [1] < 17);
+      }
+      if (cardsHeld[1] == 17 && aceAmount[1] > 0 && numOfCards[1] < 5){
+          hitMe(cardsHeld, deck, 1, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+      }
+      dealerTurn = 1;
+      drawHand(suitType, cardType, dealerSuitType, dealerCardType, numOfCards, dealerTurn);
+      cout << endl << "You held " << cardsHeld[0] << "." << endl;
+      cout << endl << "The dealer held " << cardsHeld[1] << "." << endl;
+      if (cardsHeld[0] == cardsHeld[1]){cout << endl << "You both have the same values. No one wins." << endl; playerWins[3]++;}
+      if (cardsHeld[0] >= cardsHeld[1] && cardsHeld[0] < 22 || cardsHeld[1] > 21 && cardsHeld[0] <= 21){cout << endl << "You win!" << endl;  playerWins[0]++; playerWins[3]++;}
+      else{cout << endl << "You lost..." << endl; playerWins[1]++; playerWins[3]++;}
+      shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+      dealerTurn = 0;
+      do{
+      cout << endl << "Would you like to play again? enter 'y' for yes and 'n' for no." << endl;
+      cin >> playerChoice;
+    } while (playerChoice != 'y' && playerChoice != 'Y' && playerChoice != 'n' && playerChoice != 'N');
     }
+    cout << endl << "You won " << playerWins[0] << " number of games out of " << playerWins[3] << "." << endl;
+    cout << endl << "The dealer won " << playerWins[1] << " number of games out of " << playerWins[3] << "." << endl << endl;
   }
 }
 
@@ -228,42 +264,56 @@ void drawHand( int suitType[5], int cardType[5], int dealerSuitType[5], int deal
   for(int i = 0; i < 2; i++){
     for(int j = 0; j < numOfCards[i]; j++)
     {
-      if (i = 0){
-        if (suitType[j] == 1) {localSuitType[0][j] = '\u2665';}
-        else if (suitType[j] == 2) {localSuitType[0][j] = '\u25c6';}
-        else if (suitType[j] == 3) {localSuitType[0][j] = '\u2660';}
-        else if (suitType[j] == 4) {localSuitType[0][j] = '\u2663';}
-        if (cardType[j] <= 10){//localCardType[0][j] = cardType[j] + 0x30;
-                                sprintf(localCardType[0][i],"%d", cardType[j]);} // this might be wrong
-        else if (cardType[j] == 11){localCardType[0][j] = 'J';}
-        else if (cardType[j] == 12){localCardType[0][j] = 'Q';}
-        else if (cardType[j] == 13){localCardType[0][j] = 'K';}
-        else if (cardType[j] == 14){localCardType[0][j] = 'A';}
+      if (i == 0){
+        if (suitType[j] == 1) {localSuitType[i][j] = "\u2665";}
+        else if (suitType[j] == 2) {localSuitType[i][j] = "\u25c6";}
+        else if (suitType[j] == 3) {localSuitType[i][j] = "\u2660";}
+        else if (suitType[j] == 4) {localSuitType[i][j] = "\u2663";}
+        if (cardType[j] < 10){localCardType[i][j] = std::to_string (cardType[j]);} // this might be wrong
+        else if (cardType[j] == 10){localCardType[i][j] = "X";}
+        else if (cardType[j] == 11){localCardType[i][j] = "J";}
+        else if (cardType[j] == 12){localCardType[i][j] = "Q";}
+        else if (cardType[j] == 13){localCardType[i][j] = "K";}
+        else if (cardType[j] == 14){localCardType[i][j] = "A";}
       }
-      if (i = 1){
-        if (dealerSuitType[j] == 1) {localSuitType[1][j] = '\u2665';}
-        else if (dealerSuitType[j] == 2) {localSuitType[1][j] = '\u25c6';}
-        else if (dealerSuitType[j] == 3) {localSuitType[1][j] = '\u2660';}
-        else if (dealerSuitType[j] == 4) {localSuitType[1][j] = '\u2663';}
-        if (dealerCardType[j] <= 10){localCardType[1][j] = cardType[j] + 0x30;} // this might be wrong
-        else if (dealerCardType[j] == 11){localCardType[1][j] = 'J';}
-        else if (dealerCardType[j] == 12){localCardType[1][j] = 'Q';}
-        else if (dealerCardType[j] == 13){localCardType[1][j] = 'K';}
-        else if (dealerCardType[j] == 14){localCardType[1][j] = 'A';}
+      else if (i == 1){
+        if (dealerSuitType[j] == 1) {localSuitType[i][j] = "\u2665";}
+        else if (dealerSuitType[j] == 2) {localSuitType[i][j] = "\u25c6";}
+        else if (dealerSuitType[j] == 3) {localSuitType[i][j] = "\u2660";}
+        else if (dealerSuitType[j] == 4) {localSuitType[i][j] = "\u2663";}
+        if (dealerCardType[j] < 10){localCardType[i][j] = std::to_string (dealerCardType[j]);} // this might be wrong
+        else if (dealerCardType[j] == 10){localCardType[i][j] = "X";}
+        else if (dealerCardType[j] == 11){localCardType[i][j] = "J";}
+        else if (dealerCardType[j] == 12){localCardType[i][j] = "Q";}
+        else if (dealerCardType[j] == 13){localCardType[i][j] = "K";}
+        else if (dealerCardType[j] == 14){localCardType[i][j] = "A";}
       }
     }
   }
-  cout << "                                     The Dealers Hand" << endl;
-  cout << "                               ╭-----╮ "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " ╭-----╮ ";} cout << endl;
-  cout << "                               |#####| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " |" << localCardType[1][i] << localSuitType[1][i] << "   | ";} cout << endl;
-  cout << "                               |#####| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " |     | ";} cout << endl;
-  cout << "                               |#####| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " |   " << localCardType[1][i] << localSuitType[1][i] << "| ";} cout << endl;
-  cout << "                               ╰-----╯ "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " ╰-----╯ ";} cout << endl;
-  cout << endl << endl << endl;
-  cout << "                                     Your Hand" << endl;
-  cout << "                               "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╭-----╮ ";} cout << endl;
-  cout << "                               "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |" << localCardType[0][i] << localSuitType[0][i] << "   | ";} cout << endl;
-  cout << "                               "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |     | ";} cout << endl;
-  cout << "                               "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |   " << localCardType[0][i] << localSuitType[0][i] << "| ";} cout << endl;
-  cout << "                               "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╰-----╯ ";} cout << endl;
+  if(dealerTurn == 0){
+  cout << "                                The Dealers Hand" << endl;
+  cout << "                               ╭------╮ "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " ╭------╮ ";} cout << endl;
+  cout << "                               |######| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " | " << localCardType[1][i + 1] << localSuitType[1][i + 1] << "   | ";} cout << endl;
+  cout << "                               |######| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " |      | ";} cout << endl;
+  cout << "                               |######| "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " |   " << localCardType[1][i + 1] << localSuitType[1][i + 1] << " | ";} cout << endl;
+  cout << "                               ╰------╯ "; for(int i = 0; i < (numOfCards[1] - 1); i++) {cout << " ╰------╯ ";} cout << endl;
+  cout << endl;
+  }
+  else{
+    cout << "                               The Dealers Hand" << endl;
+    cout << "                              "; for(int i = 0; i < (numOfCards[1]); i++) {cout << " ╭------╮ ";} cout << endl;
+    cout << "                              "; for(int i = 0; i < (numOfCards[1]); i++) {cout << " | " << localCardType[1][i] << localSuitType[1][i] << "   | ";} cout << endl;
+    cout << "                              "; for(int i = 0; i < (numOfCards[1]); i++) {cout << " |      | ";} cout << endl;
+    cout << "                              "; for(int i = 0; i < (numOfCards[1]); i++) {cout << " |   " << localCardType[1][i] << localSuitType[1][i] << " | ";}
+    cout << endl;
+    cout << "                              "; for(int i = 0; i < (numOfCards[1]); i++) {cout << " ╰------╯ ";} cout << endl;
+
+  }
+  cout << "                               Your Hand" << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╭------╮ ";} cout << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " | " << localCardType[0][i] << localSuitType[0][i] << "   | ";} cout << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |      | ";} cout << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |   " << localCardType[0][i] << localSuitType[0][i] << " | ";}
+  cout << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╰------╯ ";} cout << endl;
 }
