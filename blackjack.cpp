@@ -138,7 +138,8 @@ if (gameType == 'c' || gameType == 'C'){
       cout << endl << "You currently hold " << cardsHeld[0] << "." << endl;
       do{
       if(cardsHeld[0] == 21) {break;}
-      cout << endl << "Enter 'h' if you'd like to hit, enter s if you'd like to stay." << endl;
+      else if(cardsHeld[1] == 21) {break;}
+      cout << endl << "Enter 'h' if you'd like to hit, enter 's' if you'd like to stay." << endl;
       cin >> playerChoice;} while (playerChoice != 's' && playerChoice != 'S' && playerChoice != 'h' && playerChoice != 'H');
       if (playerChoice == 'h' || playerChoice == 'H'){
         do{
@@ -155,6 +156,7 @@ if (gameType == 'c' || gameType == 'C'){
       if (cardsHeld[1] < 17 && numOfCards[1] < 5){
         do {
           hitMe(cardsHeld, deck, 1, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+          if(cardsHeld[1] > 21 && aceAmount[1] > 0) {cardsHeld[1] = cardsHeld[1] - 10; aceAmount[1] --;}
         } while(cardsHeld [1] < 17);
       }
       if (cardsHeld[1] == 17 && aceAmount[1] > 0 && numOfCards[1] < 5){
@@ -174,8 +176,8 @@ if (gameType == 'c' || gameType == 'C'){
       cin >> playerChoice;
     } while (playerChoice != 'y' && playerChoice != 'Y' && playerChoice != 'n' && playerChoice != 'N');
     }
-    cout << endl << "You won " << playerWins[0] << " number of games out of " << playerWins[3] << "." << endl;
-    cout << endl << "The dealer won " << playerWins[1] << " number of games out of " << playerWins[3] << "." << endl << endl;
+    cout << endl << "You won " << playerWins[0] << " games out of " << playerWins[3] << "." << endl;
+    cout << endl << "The dealer won " << playerWins[1] << " games out of " << playerWins[3] << "." << endl << endl;
   }
 }
 
