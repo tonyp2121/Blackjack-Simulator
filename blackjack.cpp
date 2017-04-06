@@ -20,6 +20,38 @@ void drawHand( int suitType[5], int cardType[5], int dealerSuitType[5], int deal
 // Really what I need to do is make a hit function.
 // or make player specific functions but that would be a lot of work that could already be incorporated in the already done designs.
 
+//      Dealer Has:  2,3,4,5,6,7,8,9,10,A
+bool hardHit[18][10]{1,1,1,1,1,1,1,1,1,1; // player 4   // 1 means hit 0 means stay
+                    1,1,1,1,1,1,1,1,1,1; // player 5
+                    1,1,1,1,1,1,1,1,1,1; // player 6
+                    1,1,1,1,1,1,1,1,1,1; // player 7
+                    1,1,1,1,1,1,1,1,1,1; // player 8
+                    1,1,1,1,1,1,1,1,1,1; // player 9
+                    1,1,1,1,1,1,1,1,1,1; // player 10
+                    1,1,1,1,1,1,1,1,1,1; // player 11
+                    1,1,0,0,0,1,1,1,1,1; // player 12
+                    0,0,0,0,0,1,1,1,1,1; // player 13
+                    0,0,0,0,0,1,1,1,1,1; // player 14
+                    0,0,0,0,0,1,1,1,1,1; // player 15
+                    0,0,0,0,0,1,1,1,1,1; // player 16
+                    0,0,0,0,0,0,0,0,0,0; // player 17
+                    0,0,0,0,0,0,0,0,0,0; // player 18
+                    0,0,0,0,0,0,0,0,0,0; // player 19
+                    0,0,0,0,0,0,0,0,0,0; // player 20
+                    0,0,0,0,0,0,0,0,0,0; // player 21
+                    }
+
+bool softHit [9][10]{1,1,1,1,1,1,1,1,1,1; // player 13 and ace
+                     1,1,1,1,1,1,1,1,1,1; // player 14 and ace
+                     1,1,1,1,1,1,1,1,1,1; // player 15 and ace
+                     1,1,1,1,1,1,1,1,1,1; // player 16 and ace
+                     1,1,1,1,1,1,1,1,1,1; // player 17 and ace
+                     0,0,0,0,0,0,0,1,1,0; // player 18 
+                     0,0,0,0,0,0,0,0,0,0, // player 19 and ace
+                     0,0,0,0,0,0,0,0,0,0, // player 20 and ace
+                     0,0,0,0,0,0,0,0,0,0, // player 21 and ace
+                     }
+
 int main()
 {
   bool deck[52];      // bool since it only has to know if someone grabbed a card or not.
