@@ -1,3 +1,7 @@
+// credit to wizard of odds for statistical information on blackjack
+// you can find more stats on blackjack or other luck based games on
+// their site at wizardofodds.com
+
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
@@ -46,7 +50,7 @@ bool softHit [9][10]{1,1,1,1,1,1,1,1,1,1; // player 13 and ace
                      1,1,1,1,1,1,1,1,1,1; // player 15 and ace
                      1,1,1,1,1,1,1,1,1,1; // player 16 and ace
                      1,1,1,1,1,1,1,1,1,1; // player 17 and ace
-                     0,0,0,0,0,0,0,1,1,1; // player 18 
+                     0,0,0,0,0,0,0,1,1,1; // player 18
                      0,0,0,0,0,0,0,0,0,0, // player 19 and ace
                      0,0,0,0,0,0,0,0,0,0, // player 20 and ace
                      0,0,0,0,0,0,0,0,0,0, // player 21 and ace
@@ -75,9 +79,9 @@ int main()
   srand (time(NULL));               // set new "random" seed
   shuffle(deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards); // set everything to its initial state before continuing
   do{
-    cout << endl << "If you want to play enter 'p' if you want the computer to play for you enter 'c'" << endl;
+    cout << endl << "If you want to play enter 'p' if you want the computer to play for you enter 'c' lastly enter 'w' if you want to play by the wizard of odds advice." << endl;
     cin >> gameType;
-  }while (gameType != 'p' && gameType != 'P' && gameType != 'C' && gameType != 'c');
+  }while (gameType != 'p' && gameType != 'P' && gameType != 'C' && gameType != 'c' && gameType != 'w' && gameType != 'W');
 if (gameType == 'c' || gameType == 'C'){
   do{
   if (numPlayers <2 || numPlayers >6) {cout << endl << "Please try again" << endl << endl;}
@@ -209,7 +213,16 @@ if (gameType == 'c' || gameType == 'C'){
     } while (playerChoice != 'y' && playerChoice != 'Y' && playerChoice != 'n' && playerChoice != 'N');
     }
     cout << endl << "You won " << playerWins[0] << " games out of " << playerWins[3] << "." << endl;
-    cout << endl << "The dealer won " << playerWins[1] << " games out of " << playerWins[3] << "." << endl << endl;
+    cout << endl << "The dealer won " << playerWins[1] << " games out of " << playerWins[3] << "." << endl;
+    cout << endl << endl << "Which means you won " << playerWins[0]/playerWins[3] <,"% of the games." << endl << endl;
+  }
+
+  else if(gameType == 'w' || gameType == 'W'){
+    numPlayers = 2;
+    shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+    for(int i = 0; i < 1000000; i++){
+      firstDeal(cardsHeld, deck, numPlayers, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+    }
   }
 }
 
