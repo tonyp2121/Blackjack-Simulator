@@ -222,6 +222,26 @@ if (gameType == 'c' || gameType == 'C'){
     shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
     for(int i = 0; i < 1000000; i++){
       firstDeal(cardsHeld, deck, numPlayers, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+      // in between stuff
+      // I want the player to go first
+      if (dealerCardType[1] >= 10){
+        if(dealerCardType[1] == 14){dealerCardType[1] = 11;}
+        else {dealerCardType[1] = 10;}
+      }
+      while(1){}
+      if(aceAmount[0] > 1 && cardsHeld[0] > 12 && cardsHeld[0] < 22){
+        if (softHit[cardsHeld[0]-13][dealerCardType[1]-2]){
+          hitMe(cardsHeld, deck, 0, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+        }
+        else{break;}
+      }
+      if else(aceAmount[0] == 0){
+          if(hardHit[cardsHeld[0] - 4][dealerCardType[1]-2]){
+              hitMe(cardsHeld, deck, 0, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+          }
+      }
+    }
+      shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
     }
   }
 }
