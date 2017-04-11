@@ -25,36 +25,36 @@ void drawHand( int suitType[5], int cardType[5], int dealerSuitType[5], int deal
 // or make player specific functions but that would be a lot of work that could already be incorporated in the already done designs.
 
 //      Dealer Has:  2,3,4,5,6,7,8,9,10,A
-bool hardHit[18][10]{1,1,1,1,1,1,1,1,1,1; // player 4   // 1 means hit 0 means stay
-                    1,1,1,1,1,1,1,1,1,1; // player 5
-                    1,1,1,1,1,1,1,1,1,1; // player 6
-                    1,1,1,1,1,1,1,1,1,1; // player 7
-                    1,1,1,1,1,1,1,1,1,1; // player 8
-                    1,1,1,1,1,1,1,1,1,1; // player 9
-                    1,1,1,1,1,1,1,1,1,1; // player 10
-                    1,1,1,1,1,1,1,1,1,1; // player 11
-                    1,1,0,0,0,1,1,1,1,1; // player 12
-                    0,0,0,0,0,1,1,1,1,1; // player 13
-                    0,0,0,0,0,1,1,1,1,1; // player 14
-                    0,0,0,0,0,1,1,1,1,1; // player 15
-                    0,0,0,0,0,1,1,1,1,1; // player 16
-                    0,0,0,0,0,0,0,0,0,1; // player 17
-                    0,0,0,0,0,0,0,0,0,0; // player 18
-                    0,0,0,0,0,0,0,0,0,0; // player 19
-                    0,0,0,0,0,0,0,0,0,0; // player 20
-                    0,0,0,0,0,0,0,0,0,0; // player 21
-                    }
+bool hardHit[18][10]{1,1,1,1,1,1,1,1,1,1, // player 4   // 1 means hit 0 means stay
+                    1,1,1,1,1,1,1,1,1,1, // player 5
+                    1,1,1,1,1,1,1,1,1,1, // player 6
+                    1,1,1,1,1,1,1,1,1,1, // player 7
+                    1,1,1,1,1,1,1,1,1,1, // player 8
+                    1,1,1,1,1,1,1,1,1,1, // player 9
+                    1,1,1,1,1,1,1,1,1,1, // player 10
+                    1,1,1,1,1,1,1,1,1,1, // player 11
+                    1,1,0,0,0,1,1,1,1,1, // player 12
+                    0,0,0,0,0,1,1,1,1,1, // player 13
+                    0,0,0,0,0,1,1,1,1,1, // player 14
+                    0,0,0,0,0,1,1,1,1,1, // player 15
+                    0,0,0,0,0,1,1,1,1,1, // player 16
+                    0,0,0,0,0,0,0,0,0,1, // player 17
+                    0,0,0,0,0,0,0,0,0,0, // player 18
+                    0,0,0,0,0,0,0,0,0,0, // player 19
+                    0,0,0,0,0,0,0,0,0,0, // player 20
+                    0,0,0,0,0,0,0,0,0,0, // player 21
+                  };
 
-bool softHit [9][10]{1,1,1,1,1,1,1,1,1,1; // player 13 and ace
-                     1,1,1,1,1,1,1,1,1,1; // player 14 and ace
-                     1,1,1,1,1,1,1,1,1,1; // player 15 and ace
-                     1,1,1,1,1,1,1,1,1,1; // player 16 and ace
-                     1,1,1,1,1,1,1,1,1,1; // player 17 and ace
-                     0,0,0,0,0,0,0,1,1,1; // player 18
+bool softHit [9][10]{1,1,1,1,1,1,1,1,1,1, // player 13 and ace
+                     1,1,1,1,1,1,1,1,1,1, // player 14 and ace
+                     1,1,1,1,1,1,1,1,1,1, // player 15 and ace
+                     1,1,1,1,1,1,1,1,1,1, // player 16 and ace
+                     1,1,1,1,1,1,1,1,1,1, // player 17 and ace
+                     0,0,0,0,0,0,0,1,1,1, // player 18
                      0,0,0,0,0,0,0,0,0,0, // player 19 and ace
                      0,0,0,0,0,0,0,0,0,0, // player 20 and ace
                      0,0,0,0,0,0,0,0,0,0, // player 21 and ace
-                     }
+                   };
 
 int main()
 {
@@ -214,35 +214,71 @@ if (gameType == 'c' || gameType == 'C'){
     }
     cout << endl << "You won " << playerWins[0] << " games out of " << playerWins[3] << "." << endl;
     cout << endl << "The dealer won " << playerWins[1] << " games out of " << playerWins[3] << "." << endl;
-    cout << endl << endl << "Which means you won " << playerWins[0]/playerWins[3] <,"% of the games." << endl << endl;
+    cout << endl << endl << "Which means you won " << playerWins[0]/playerWins[3] << "% of the games." << endl << endl;
   }
 
   else if(gameType == 'w' || gameType == 'W'){
     numPlayers = 2;
     shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+    bool firstPass = true;
     for(int i = 0; i < 1000000; i++){
       firstDeal(cardsHeld, deck, numPlayers, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+      //cout << "Player currently has " << cardsHeld[0] << endl;
+      //cout << "Dealer currently has " << cardsHeld[1] << endl;
       // in between stuff
       // I want the player to go first
       if (dealerCardType[1] >= 10){
         if(dealerCardType[1] == 14){dealerCardType[1] = 11;}
         else {dealerCardType[1] = 10;}
       }
-      while(1){}
-      if(aceAmount[0] > 1 && cardsHeld[0] > 12 && cardsHeld[0] < 22){
-        if (softHit[cardsHeld[0]-13][dealerCardType[1]-2]){
+      //cout << "Player can see the dealer has a card worth " << dealerCardType[1] << endl;
+      firstPass = true;
+      while(1){
+      if (firstPass && cardsHeld[0] == 21 || firstPass && cardsHeld[1] == 21) {break;}
+      if(aceAmount[0] > 0 && cardsHeld[0] > 12 && cardsHeld[0] < 22 && numOfCards[0] < 5){
+        if (softHit[cardsHeld[0]-13][dealerCardType[1]-2] == 1){
+          //cout << "Player hit at soft " << cardsHeld[0];
           hitMe(cardsHeld, deck, 0, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+          if (cardsHeld[0] > 21 && aceAmount[0] > 0) {cardsHeld[0] = cardsHeld[0] - 10; aceAmount[0]--;}
+          //cout << " Player now has " << cardsHeld[0] << endl;
         }
         else{break;}
       }
-      if else(aceAmount[0] == 0){
-          if(hardHit[cardsHeld[0] - 4][dealerCardType[1]-2]){
+      else if(aceAmount[0] == 0 && numOfCards[0] < 5){
+          if(hardHit[cardsHeld[0] - 4][dealerCardType[1]-2] == 1){
+            //cout << "Player hit at hard " << cardsHeld[0];
               hitMe(cardsHeld, deck, 0, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+              if (cardsHeld[0] > 21 && aceAmount[0] > 0) {cardsHeld[0] = cardsHeld[0] - 10; aceAmount[0]--;}
+              //cout << " Player now has " << cardsHeld[0] << endl;
           }
+          else{break;}
       }
-    }
+      else {break;}
+      if (cardsHeld[0] > 21 || numOfCards[0] >= 5) {break;}
+      firstPass = false;
+      }
+      // player is done dealer is up
+      if (cardsHeld[1] < 17 && numOfCards[1] < 5){
+        do {
+          hitMe(cardsHeld, deck, 1, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+          if(cardsHeld[1] > 21 && aceAmount[1] > 0) {cardsHeld[1] = cardsHeld[1] - 10; aceAmount[1] --;}
+        } while(cardsHeld [1] < 17);
+      }
+      if (cardsHeld[1] == 17 && aceAmount[1] > 0 && numOfCards[1] < 5){
+          hitMe(cardsHeld, deck, 1, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
+      }
+      if (cardsHeld[0] > cardsHeld[1] && cardsHeld[0] < 22 || cardsHeld[1] > 21 && cardsHeld[0] <= 21) {playerWins[0]++;}
+      else if (cardsHeld[1] == cardsHeld[0] && cardsHeld[1] <= 21) {playerWins[2]++;}
+      else {playerWins[1]++;}
+      //cout << "Player held " << cardsHeld[0] << endl;
+      //cout << "Dealer held " << cardsHeld[1] << endl << endl;
+      playerWins[3]++;
       shuffle (deck, cardsHeld, aceAmount, gameType, suitType, cardType, dealerSuitType, dealerCardType, numOfCards);
     }
+    cout << "Player Wins " << playerWins[0] << endl;
+    cout << "Dealer Wins " << playerWins[1] << endl;
+    cout << "No wins     " << playerWins[2] << endl << endl;
+    cout << "Total Games " << playerWins[3] << endl << endl;
   }
 }
 
@@ -283,7 +319,7 @@ void hitMe(int cardsHeld[6], bool deck[52], int playerChoice, int aceAmount[6], 
     newCard = rand() % 52;
   } while (deck[newCard] == 0);
   deck[newCard] = 0;
-  if (gameType == 'p' || gameType == 'P'){
+  if (gameType == 'p' || gameType == 'P' || ((gameType == 'w' || gameType == 'W') && playerChoice == 1)){
     if (playerChoice == 0)
     {
       suitType[numOfCards[0]] = newCard % 4 + 1;
@@ -382,5 +418,5 @@ void drawHand( int suitType[5], int cardType[5], int dealerSuitType[5], int deal
   cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |      | ";} cout << endl;
   cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " |   " << localCardType[0][i] << localSuitType[0][i] << " | ";}
   cout << endl;
-  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╰------╯ ";} cout << endl;
+  cout << "                              "; for(int i = 0; i < (numOfCards[0]); i++) {cout << " ╰------╯ ";}  cout << endl;
 }
